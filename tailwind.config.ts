@@ -9,10 +9,12 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-
+        'main-white': '#FFFBE9',
+        'main-black': '#141F2D',
       },
     },
   },
   plugins: [],
 };
+
 export default config;
