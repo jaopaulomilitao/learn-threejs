@@ -5,3 +5,9 @@
 body {
   font-family: 'Inter', sans-serif;
 }
+
+
+p:empty {
+  display: block;
+  height: 1em;
+}

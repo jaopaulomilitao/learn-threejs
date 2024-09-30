@@ -11,11 +11,11 @@ interface EditorProps {
 }
 
 const Editor: React.FC<EditorProps> = ({ lessonId, content, onChange }) => {
+    console.log(lessonId)
     const editor = useEditor({
         extensions: [StarterKit],
         content: content || '', // O conteúdo inicial
         onUpdate: ({ editor }) => {
-            console.log(lessonId)
             const updatedContent = editor.getHTML();
             onChange(updatedContent); // Atualiza o conteúdo no estado pai
         },
@@ -23,7 +23,7 @@ const Editor: React.FC<EditorProps> = ({ lessonId, content, onChange }) => {
 
     useEffect(() => {
         if (editor && content) {
-            editor.commands.setContent(content); // Atualiza o conteúdo do editor quando a prop content muda
+            editor.commands.setContent(content, false, { preserveWhitespace: "full" }); // Atualiza o conteúdo do editor quando a prop content muda
         }
     }, [editor, content]);
 
