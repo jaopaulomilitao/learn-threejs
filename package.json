@@ -11,7 +11,7 @@
   "dependencies": {
     "@tiptap/extension-blockquote": "^2.8.0",
     "@tiptap/extension-bullet-list": "^2.8.0",
-    "@tiptap/extension-code-block-lowlight": "^2.8.0",
+    "@tiptap/extension-code-block": "^2.8.0",
     "@tiptap/extension-heading": "^2.8.0",
     "@tiptap/extension-horizontal-rule": "^2.8.0",
     "@tiptap/extension-list-item": "^2.8.0",

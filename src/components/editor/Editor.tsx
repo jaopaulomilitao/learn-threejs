@@ -7,24 +7,12 @@ import OrderedList from '@tiptap/extension-ordered-list';
 import ListItem from '@tiptap/extension-list-item';
 import Heading from '@tiptap/extension-heading';
 import Blockquote from '@tiptap/extension-blockquote';
-import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
+import CodeBlock from '@tiptap/extension-code-block'; // Alterado para CodeBlock
 import HorizontalRule from '@tiptap/extension-horizontal-rule';
 import Document from '@tiptap/extension-document';
 import Paragraph from '@tiptap/extension-paragraph';
 import Text from '@tiptap/extension-text';
 import { Dispatch, SetStateAction } from 'react';
-
-import css from 'highlight.js/lib/languages/css';
-import js from 'highlight.js/lib/languages/javascript';
-import ts from 'highlight.js/lib/languages/typescript';
-import html from 'highlight.js/lib/languages/xml';
-import { all, createLowlight } from 'lowlight';
-
-const lowlight = createLowlight(all);
-lowlight.register('html', html);
-lowlight.register('css', css);
-lowlight.register('js', js);
-lowlight.register('ts', ts);
 
 interface EditorProps {
     lessonId: string;
@@ -33,6 +21,7 @@ interface EditorProps {
 }
 
 const Editor: React.FC<EditorProps> = ({ lessonId, content, onChange }) => {
+    console.log(lessonId);
     const editor = useEditor({
         extensions: [
             StarterKit,
@@ -58,8 +47,7 @@ const Editor: React.FC<EditorProps> = ({ lessonId, content, onChange }) => {
                     class: 'border-l-4 border-gray-400 pl-4 italic text-gray-600',
                 },
             }),
-            CodeBlockLowlight.configure({
-                lowlight,
+            CodeBlock.configure({ // Simplificação para CodeBlock
                 HTMLAttributes: {
                     class: 'bg-gray-100 p-4 rounded-md overflow-auto',
                 },
@@ -77,8 +65,10 @@ const Editor: React.FC<EditorProps> = ({ lessonId, content, onChange }) => {
     });
 
     useEffect(() => {
-        if (editor && content) {
-            editor.commands.setContent(content, false, { preserveWhitespace: "full" });
+        if (editor?.isEmpty) {
+            if (editor && content) {
+                editor.commands.setContent(content, false, { preserveWhitespace: 'full' });
+            }
         }
     }, [editor, content]);
 
