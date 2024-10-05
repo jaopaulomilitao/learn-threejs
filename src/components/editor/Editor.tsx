@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import BulletList from '@tiptap/extension-bullet-list';
+import ResizableImage from 'tiptap-extension-resize-image'; // Importar a extensão
 import OrderedList from '@tiptap/extension-ordered-list';
 import ListItem from '@tiptap/extension-list-item';
 import Heading from '@tiptap/extension-heading';
@@ -13,6 +14,8 @@ import Document from '@tiptap/extension-document';
 import Paragraph from '@tiptap/extension-paragraph';
 import Text from '@tiptap/extension-text';
 import { Dispatch, SetStateAction } from 'react';
+import { uploadImage } from '@/features/images/api/storage';
+
 
 interface EditorProps {
     lessonId: string;
@@ -56,6 +59,7 @@ const Editor: React.FC<EditorProps> = ({ lessonId, content, onChange }) => {
             Document,
             Paragraph,
             Text,
+            ResizableImage, // Adicione a extensão de imagem redimensionável
         ],
         content: content || '',
         onUpdate: ({ editor }) => {
@@ -75,6 +79,41 @@ const Editor: React.FC<EditorProps> = ({ lessonId, content, onChange }) => {
     if (!editor) {
         return null;
     }
+
+    const handleImageUpload = () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = async () => {
+            if (input.files?.[0]) {
+                const file = input.files[0];
+
+                // Verificar o tamanho do arquivo (exemplo: máximo 2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('O tamanho máximo da imagem é 2MB.');
+                    return;
+                }
+
+                try {
+                    const imageUrl = await uploadImage(file);
+
+                    // Inserir a imagem no editor com a classe personalizada
+                    editor.chain().focus().insertContent({
+                        type: 'customImage',
+                        attrs: { src: imageUrl, class: 'resizable-image' },
+                    }).run();
+
+                } catch (error) {
+                    console.error('Erro ao fazer upload da imagem:', error);
+                    alert('Erro ao fazer upload da imagem. Por favor, tente novamente.');
+                }
+            }
+        };
+        input.click();
+    };
+
+
+
 
     return (
         <div className='bg-main-white p-4 rounded-sm my-3'>
@@ -148,6 +187,13 @@ const Editor: React.FC<EditorProps> = ({ lessonId, content, onChange }) => {
                 >
                     Lista Ordenada
                 </button>
+                <button
+                    className="px-4 py-2 rounded"
+                    onClick={handleImageUpload}
+                >
+                    Inserir Imagem
+                </button>
+
             </div>
 
             <EditorContent editor={editor} />

@@ -25,3 +25,7 @@ h3 {
   @apply text-xl;
   /* ou um tamanho de fonte que preferir */
 }
+
+.ProseMirror:focus {
+  outline: none;
+}

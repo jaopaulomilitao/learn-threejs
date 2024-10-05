@@ -1,7 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Editor from "@/components/editor/Editor";
-import ImageUploader from "@/components/image-uploader/ImageUploader";
+// Remova a importação do ImageUploader
+// import ImageUploader from "@/components/image-uploader/ImageUploader";
 import useLesson from '@/features/lessons/hooks/useLesson';
 
 const EditPage = () => {
@@ -9,7 +10,6 @@ const EditPage = () => {
     const { content, save, loading } = useLesson(lessonId);
     const [editorContent, setEditorContent] = useState<string | null>(null);
 
-    // Atualiza o conteúdo do editor ao carregar a lição
     useEffect(() => {
         setEditorContent(content);
     }, [content]);
@@ -19,11 +19,6 @@ const EditPage = () => {
             await save(editorContent);
             alert('Lição salva com sucesso!');
         }
-    };
-
-    const handleImageUpload = (url: string) => {
-        console.log('Imagem enviada:', url);
-        // Aqui você pode inserir o link da imagem no conteúdo do editor
     };
 
     if (loading) {
@@ -40,7 +35,6 @@ const EditPage = () => {
             >
                 Salvar
             </button>
-            <ImageUploader onUpload={handleImageUpload} />
         </div>
     );
 };
