@@ -1,3 +1,4 @@
+
 'use client';
 import { useEffect } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
@@ -15,6 +16,7 @@ import Paragraph from '@tiptap/extension-paragraph';
 import Text from '@tiptap/extension-text';
 import { Dispatch, SetStateAction } from 'react';
 import { uploadImage } from '@/features/images/api/storage';
+import Iframe from '../../lib/tiptap/extensions/Embed';
 
 
 interface EditorProps {
@@ -60,6 +62,7 @@ const Editor: React.FC<EditorProps> = ({ lessonId, content, onChange }) => {
             Paragraph,
             Text,
             ResizableImage, // Adicione a extensão de imagem redimensionável
+            Iframe,
         ],
         content: content || '',
         onUpdate: ({ editor }) => {
@@ -112,6 +115,38 @@ const Editor: React.FC<EditorProps> = ({ lessonId, content, onChange }) => {
         input.click();
     };
 
+    // Função para lidar com a inserção do iframe
+    const handleInsertIframe = () => {
+        // Obter a string completa do iframe
+        const fullIframeCode = prompt("Insira o código do iframe completo:");
+
+        if (fullIframeCode) {
+            // Criar um elemento temporário para extrair a URL e o título
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = fullIframeCode;
+
+            // Extrair a URL do primeiro iframe encontrado
+            const iframeElement = tempDiv.querySelector('iframe');
+            const src = iframeElement ? iframeElement.getAttribute('src') : null;
+            const title = iframeElement ? iframeElement.getAttribute('title') : '';
+
+            // Verificar se a URL foi extraída corretamente
+            if (src) {
+                // Insira o iframe com os atributos corretos
+                editor.chain().focus().insertContent({
+                    type: 'iframe',
+                    attrs: {
+                        src: src, // URL do iframe
+                        title: title, // Título do iframe
+                        height: '400', // Altura padrão
+                        style: 'width: 100%;', // Largura padrão
+                    },
+                }).run();
+            } else {
+                alert("URL do iframe não pôde ser extraída. Por favor, verifique o código do iframe.");
+            }
+        }
+    };
 
 
 
@@ -193,7 +228,12 @@ const Editor: React.FC<EditorProps> = ({ lessonId, content, onChange }) => {
                 >
                     Inserir Imagem
                 </button>
-
+                <button
+                    className="px-4 py-2 rounded"
+                    onClick={handleInsertIframe}
+                >
+                    Inserir Iframe
+                </button>
             </div>
 
             <EditorContent editor={editor} />
