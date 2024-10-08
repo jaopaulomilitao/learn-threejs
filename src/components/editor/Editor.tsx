@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import BulletList from '@tiptap/extension-bullet-list';
-import ResizableImage from 'tiptap-extension-resize-image'; // Importar a extensão
+import ImageResize from 'tiptap-extension-resize-image'; // Importar a extensão
 import OrderedList from '@tiptap/extension-ordered-list';
 import ListItem from '@tiptap/extension-list-item';
 import Heading from '@tiptap/extension-heading';
@@ -61,7 +61,7 @@ const Editor: React.FC<EditorProps> = ({ lessonId, content, onChange }) => {
             Document,
             Paragraph,
             Text,
-            ResizableImage, // Adicione a extensão de imagem redimensionável
+            ImageResize, // Adicione a extensão de imagem redimensionável
             Iframe,
         ],
         content: content || '',
@@ -91,7 +91,6 @@ const Editor: React.FC<EditorProps> = ({ lessonId, content, onChange }) => {
             if (input.files?.[0]) {
                 const file = input.files[0];
 
-                // Verificar o tamanho do arquivo (exemplo: máximo 2MB)
                 if (file.size > 2 * 1024 * 1024) {
                     alert('O tamanho máximo da imagem é 2MB.');
                     return;
@@ -100,9 +99,9 @@ const Editor: React.FC<EditorProps> = ({ lessonId, content, onChange }) => {
                 try {
                     const imageUrl = await uploadImage(file);
 
-                    // Inserir a imagem no editor com a classe personalizada
+                    // Inserir a imagem no editor com o tipo 'image'
                     editor.chain().focus().insertContent({
-                        type: 'customImage',
+                        type: 'image', // Usar 'image', já que a extensão redimensiona esse tipo
                         attrs: { src: imageUrl, class: 'resizable-image' },
                     }).run();
 
@@ -114,6 +113,8 @@ const Editor: React.FC<EditorProps> = ({ lessonId, content, onChange }) => {
         };
         input.click();
     };
+
+
 
     // Função para lidar com a inserção do iframe
     const handleInsertIframe = () => {
