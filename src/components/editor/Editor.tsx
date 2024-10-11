@@ -18,6 +18,10 @@ import Link from '@tiptap/extension-link'; // Importando a extensão de Link
 import { Dispatch, SetStateAction } from 'react';
 import { uploadImage } from '@/features/images/api/storage';
 import Iframe from '../../lib/tiptap/extensions/Embed';
+import { FaBold, FaItalic, FaQuoteLeft, FaCode, FaListUl, FaListOl, FaImage, FaLink, FaAlignLeft, FaAlignCenter, FaAlignRight, FaAlignJustify } from 'react-icons/fa'; // Ícones do react-icons
+import ExtensionButton from '../extension-button/ExtensionButton';
+import { AiOutlineCodepen } from 'react-icons/ai';
+import { TbH1, TbH2, TbH3 } from 'react-icons/tb';
 
 interface EditorProps {
   lessonId: string;
@@ -156,128 +160,122 @@ const Editor: React.FC<EditorProps> = ({ lessonId, content, onChange }) => {
   };
 
   return (
-    <div className='bg-main-white p-4 rounded-sm my-3'>
-      <div className="flex space-x-1 mb-4">
-        <button
-          className={`px-2 py-1 rounded ${editor.isActive('bold') ? 'bg-gray-200' : ''}`}
+    <div className='bg-white p-6 my-3 shadow-lg rounded-lg flex flex-col gap-7'>
+      {/* Div sticky centralizada e responsiva */}
+      <div className="flex flex-wrap gap-3 p-3 bg-[#E2E4E7] rounded-md w-auto max-w-full sticky top-5 z-50 mt-2 shadow-md mx-auto">
+        {/* Botão para negrito */}
+        <ExtensionButton
+          icon={FaBold}
+          isActive={editor.isActive('bold')}
           onClick={() => editor.chain().focus().toggleBold().run()}
-        >
-          <b>B</b>
-        </button>
+        />
 
-        <button
-          className={`px-2 py-1 rounded ${editor.isActive('italic') ? 'bg-gray-200' : ''}`}
+        {/* Botão para itálico */}
+        <ExtensionButton
+          icon={FaItalic}
+          isActive={editor.isActive('italic')}
           onClick={() => editor.chain().focus().toggleItalic().run()}
-        >
-          <i>I</i>
-        </button>
+        />
 
-        <button
-          className={`px-2 py-1 rounded ${editor.isActive('heading', { level: 1 }) ? 'bg-gray-200' : ''}`}
+        {/* Botão para título H1 */}
+        <ExtensionButton
+          icon={TbH1}
+          isActive={editor.isActive('heading', { level: 1 })}
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        >
-          H1
-        </button>
+          size={30}
+        />
 
-        <button
-          className={`px-2 py-1 rounded ${editor.isActive('heading', { level: 2 }) ? 'bg-gray-200' : ''}`}
+        {/* Botão para título H2 */}
+        <ExtensionButton
+          icon={TbH2}
+          isActive={editor.isActive('heading', { level: 2 })}
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        >
-          H2
-        </button>
+          size={30}
+        />
 
-        <button
-          className={`px-2 py-1 rounded ${editor.isActive('heading', { level: 3 }) ? 'bg-gray-200' : ''}`}
+        {/* Botão para título H3 */}
+        <ExtensionButton
+          icon={TbH3}
+          isActive={editor.isActive('heading', { level: 3 })}
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-        >
-          H3
-        </button>
+          size={30}
+        />
 
-        <button
-          className={`px-2 py-1 rounded ${editor.isActive('blockquote') ? 'bg-gray-200' : ''}`}
+        {/* Botão para citação */}
+        <ExtensionButton
+          icon={FaQuoteLeft}
+          isActive={editor.isActive('blockquote')}
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
-        >
-          Cit.
-        </button>
+        />
 
-        <button
-          className={`px-2 py-1 rounded ${editor.isActive('codeBlock') ? 'bg-gray-200' : ''}`}
+        {/* Botão para código */}
+        <ExtensionButton
+          icon={FaCode}
+          isActive={editor.isActive('codeBlock')}
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-        >
-          Code
-        </button>
+        />
 
-        <button
-          className="px-2 py-1 rounded"
-          onClick={() => editor.chain().focus().setHorizontalRule().run()}
-        >
-          Linha
-        </button>
-
-        <button
-          className={`px-2 py-1 rounded ${editor.isActive('bulletList') ? 'bg-gray-200' : ''}`}
+        {/* Botão para linha horizontal */}
+        <ExtensionButton
+          icon={FaListUl}
+          isActive={editor.isActive('bulletList')}
           onClick={() => editor.chain().focus().toggleBulletList().run()}
-        >
-          UL
-        </button>
+        />
 
-        <button
-          className={`px-2 py-1 rounded ${editor.isActive('orderedList') ? 'bg-gray-200' : ''}`}
+        {/* Botão para lista ordenada */}
+        <ExtensionButton
+          icon={FaListOl}
+          isActive={editor.isActive('orderedList')}
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        >
-          OL
-        </button>
+        />
 
-        <button
-          className="px-2 py-1 rounded"
-          onClick={handleImageUpload}
-        >
-          Img
-        </button>
+        {/* Botão para imagem */}
+        <ExtensionButton
+          icon={FaImage}
+          isActive={false} // Não há um estado ativo para imagem, mas pode ser usado para abrir o uploader
+          onClick={handleImageUpload} // Substitua pela função de upload de imagem
+        />
 
-        <button
-          className="px-2 py-1 rounded"
-          onClick={handleInsertIframe}
-        >
-          Ifr.
-        </button>
+        {/* Botão para imagem */}
+        <ExtensionButton
+          icon={AiOutlineCodepen}
+          isActive={false} // Não há um estado ativo para imagem, mas pode ser usado para abrir o uploader
+          onClick={handleInsertIframe} // Substitua pela função de upload de imagem
+        />
 
-        {/* Link */}
-        <button
-          className="px-2 py-1 rounded"
-          onClick={handleAddLink}
-        >
-          Link
-        </button>
+        {/* Botão para link */}
+        <ExtensionButton
+          icon={FaLink}
+          isActive={false} // Não há um estado ativo para link, mas pode ser usado para abrir o modal de link
+          onClick={handleAddLink} // Substitua pela função para adicionar link
+        />
 
-        {/* Alinhamento */}
-        <button
-          className="px-2 py-1 rounded"
+        {/* Botões de alinhamento */}
+        <ExtensionButton
+          icon={FaAlignLeft}
+          isActive={editor.isActive('align', { align: 'left' })}
           onClick={() => editor.chain().focus().setTextAlign('left').run()}
-        >
-          Esq.
-        </button>
-        <button
-          className="px-2 py-1 rounded"
+        />
+        <ExtensionButton
+          icon={FaAlignCenter}
+          isActive={editor.isActive('align', { align: 'center' })}
           onClick={() => editor.chain().focus().setTextAlign('center').run()}
-        >
-          Cen.
-        </button>
-        <button
-          className="px-2 py-1 rounded"
+        />
+        <ExtensionButton
+          icon={FaAlignRight}
+          isActive={editor.isActive('align', { align: 'right' })}
           onClick={() => editor.chain().focus().setTextAlign('right').run()}
-        >
-          Dir.
-        </button>
-        <button
-          className="px-2 py-1 rounded"
+        />
+        <ExtensionButton
+          icon={FaAlignJustify}
+          isActive={editor.isActive('align', { align: 'justify' })}
           onClick={() => editor.chain().focus().setTextAlign('justify').run()}
-        >
-          Just.
-        </button>
+        />
       </div>
 
-      <EditorContent editor={editor} />
+      <div className="w-full max-w-full min-h-[300px]">
+        <EditorContent editor={editor} />
+      </div>
     </div>
   );
 };
