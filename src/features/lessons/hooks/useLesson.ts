@@ -1,39 +1,38 @@
-'use client';
 import { useState, useEffect } from 'react';
-import { saveLesson, getLesson } from '@/features/lessons/api/firestore';
+import { fetchLessonById, updateLesson } from '@/features/lessons/api/firestore';
+import { Lesson } from '@/features/lessons/api/firestore';
 
-const useLesson = (lessonId: string) => {
+export const useLesson = (lessonId: string) => {
     const [content, setContent] = useState<string | null>(null);
+    const [lessonData, setLessonData] = useState<Lesson | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        const fetchLesson = async () => {
-            if (!lessonId) return; // Não faz nada se lessonId for inválido
-
+        const loadLesson = async () => {
             setLoading(true);
             try {
-                const lessonContent = await getLesson(lessonId);
-                setContent(lessonContent);
+                const data = await fetchLessonById(lessonId);
+                setLessonData(data as Lesson);
+                setContent(data.content);
             } catch (error) {
-                console.error('Erro ao buscar a lição:', error);
-                setContent(null);
+                console.error('Erro ao carregar a lição:', error);
             } finally {
                 setLoading(false);
             }
         };
-
-        fetchLesson();
+        loadLesson();
     }, [lessonId]);
 
-    const save = async (newContent: string) => {
+    const save = async (updatedLesson: Lesson) => {
         try {
-            await saveLesson(lessonId, newContent);
+            await updateLesson(lessonId, updatedLesson);
+            alert('Lição atualizada com sucesso!');
         } catch (error) {
             console.error('Erro ao salvar a lição:', error);
         }
     };
 
-    return { content, save, loading, setContent };
-};
+    return { content, save, lessonData, loading };
 
-export default useLesson;
+
+};

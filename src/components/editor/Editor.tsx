@@ -24,13 +24,12 @@ import { AiOutlineCodepen } from 'react-icons/ai';
 import { TbH1, TbH2, TbH3 } from 'react-icons/tb';
 
 interface EditorProps {
-  lessonId: string;
+
   content: string | null;
   onChange: Dispatch<SetStateAction<string | null>>;
 }
 
-const Editor: React.FC<EditorProps> = ({ lessonId, content, onChange }) => {
-  console.log(lessonId);
+const Editor: React.FC<EditorProps> = ({ content, onChange }) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -87,13 +86,12 @@ const Editor: React.FC<EditorProps> = ({ lessonId, content, onChange }) => {
     },
   });
 
+  // Sincronizar o conteúdo do editor sempre que `content` mudar
   useEffect(() => {
-    if (editor?.isEmpty) {
-      if (editor && content) {
-        editor.commands.setContent(content, false, { preserveWhitespace: 'full' });
-      }
+    if (editor && content !== null && content !== editor.getHTML()) {
+      editor.commands.setContent(content, false, { preserveWhitespace: 'full' });
     }
-  }, [editor, content]);
+  }, [content, editor]);
 
   if (!editor) {
     return null;
@@ -176,7 +174,6 @@ const Editor: React.FC<EditorProps> = ({ lessonId, content, onChange }) => {
           isActive={editor.isActive('italic')}
           onClick={() => editor.chain().focus().toggleItalic().run()}
         />
-
         {/* Botão para título H1 */}
         <ExtensionButton
           icon={TbH1}
@@ -200,6 +197,10 @@ const Editor: React.FC<EditorProps> = ({ lessonId, content, onChange }) => {
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
           size={30}
         />
+
+        {/* Linha vertical */}
+        <div className="border-[1.5px] border-main-black/50 h-auto mx-2" /> {/* Linha vertical */}
+
 
         {/* Botão para citação */}
         <ExtensionButton
@@ -249,6 +250,8 @@ const Editor: React.FC<EditorProps> = ({ lessonId, content, onChange }) => {
           isActive={false} // Não há um estado ativo para link, mas pode ser usado para abrir o modal de link
           onClick={handleAddLink} // Substitua pela função para adicionar link
         />
+        {/* Linha vertical */}
+        <div className="border-[1.5px] border-main-black/50 h-auto mx-2" /> {/* Linha vertical */}
 
         {/* Botões de alinhamento */}
         <ExtensionButton
