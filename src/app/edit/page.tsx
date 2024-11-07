@@ -98,13 +98,18 @@ const EditPage = () => {
     }, [selectedLessonId]);
 
     return (
-        <div className="container mx-auto p-8 flex gap-10">
-            {/* Lesson List - ocupando espaço proporcional */}
-            <div className="flex-none w-[20%] min-w-[200px] max-w-[250px]">
+        <div className="container mx-auto p-8 flex flex-col lg:flex-row gap-10 w-full">
+            {/* Lesson List - Sidebar responsivo */}
+            <div className="flex-none w-full lg:w-[20%] min-w-[200px] max-w-[250px] hidden 2xl:block">
                 {memoizedLessonList}
             </div>
 
-            {/* Conteúdo Principal */}
+            {/* Sidebar em telas pequenas */}
+            <div className="flex-none w-full lg:w-[20%] min-w-[200px] max-w-[250px] block fixed -mx-4 md:-mx-7 z-20 2xl:hidden">
+                {memoizedLessonList}
+            </div>
+
+            {/* Conteúdo Principal, responsivo */}
             <div className="flex-grow flex flex-col gap-9">
                 {loading || imageLoading ? (
                     <>
@@ -123,14 +128,13 @@ const EditPage = () => {
                 ) : (
                     <>
                         <div className="flex flex-col gap-3 items-center w-full">
-                            <div className="w-10 h-2 rounded-md" style={{ backgroundColor: bgColor }}>
-                                <input
-                                    type="color"
-                                    value={bgColor}
-                                    onChange={(e) => setBgColor(e.target.value)}
-                                    className="cursor-pointer w-full h-full mt-4"
-                                />
-                            </div>
+                            <div className="w-10 h-2 rounded-md" style={{ backgroundColor: bgColor }} />
+                            <input
+                                type="color"
+                                value={bgColor}
+                                onChange={(e) => setBgColor(e.target.value)}
+                                className="cursor-pointer w-10 h-1 -mt-4 opacity-0"
+                            />
                             <input
                                 type="text"
                                 value={title}
@@ -147,6 +151,7 @@ const EditPage = () => {
                             />
                         </div>
 
+                        {/* Imagem da lição com estilo similar */}
                         <div className="relative w-full h-[250px] overflow-hidden rounded-lg shadow-md cursor-pointer" onClick={handleImageClick}>
                             <input
                                 type="file"
@@ -165,7 +170,10 @@ const EditPage = () => {
                             <div className="absolute inset-0 bg-black opacity-0 hover:opacity-30 transition-opacity duration-300" />
                         </div>
 
+                        {/* Editor */}
                         <Editor content={editorContent} onChange={setEditorContent} />
+
+                        {/* Botão de salvar */}
                         <button
                             className="px-4 py-2 bg-green-500 text-white rounded mt-4 hover:bg-green-600 transition"
                             onClick={handleSave}
