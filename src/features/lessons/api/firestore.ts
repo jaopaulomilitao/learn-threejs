@@ -45,6 +45,7 @@ export const fetchLessons = async () => {
     const lessons = querySnapshot.docs.map(doc => ({
         id: doc.id,
         title: doc.data().title,
+        colorTag: doc.data().colorTag,
     }));
     return lessons;
 };

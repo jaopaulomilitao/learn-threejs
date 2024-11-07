@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@nextui-org/react": "^2.4.8",
+    "@nextui-org/skeleton": "^2.0.32",
     "@tiptap/core": "^2.8.0",
     "@tiptap/extension-blockquote": "^2.8.0",
     "@tiptap/extension-bullet-list": "^2.8.0",
@@ -22,6 +24,7 @@
     "@tiptap/extension-text-align": "^2.8.0",
     "@tiptap/react": "^2.7.4",
     "@tiptap/starter-kit": "^2.7.4",
+    "clsx": "^2.1.1",
     "firebase": "^10.13.2",
     "highlight.js": "^11.10.0",
     "lowlight": "^3.1.0",

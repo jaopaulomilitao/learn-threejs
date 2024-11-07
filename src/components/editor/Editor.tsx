@@ -179,7 +179,7 @@ const Editor: React.FC<EditorProps> = ({ content, onChange }) => {
           icon={TbH1}
           isActive={editor.isActive('heading', { level: 1 })}
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-          size={30}
+          size={20}
         />
 
         {/* Botão para título H2 */}
@@ -187,7 +187,7 @@ const Editor: React.FC<EditorProps> = ({ content, onChange }) => {
           icon={TbH2}
           isActive={editor.isActive('heading', { level: 2 })}
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          size={30}
+          size={20}
         />
 
         {/* Botão para título H3 */}
@@ -195,7 +195,7 @@ const Editor: React.FC<EditorProps> = ({ content, onChange }) => {
           icon={TbH3}
           isActive={editor.isActive('heading', { level: 3 })}
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-          size={30}
+          size={20}
         />
 
         {/* Linha vertical */}

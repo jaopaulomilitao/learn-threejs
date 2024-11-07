@@ -1,5 +1,5 @@
 "use client"
-import useLesson from '@/features/lessons/hooks/useLesson';
+import { useLesson } from '@/features/lessons/hooks/useLesson';
 
 type LessonViewProps = {
     lessonId: string;

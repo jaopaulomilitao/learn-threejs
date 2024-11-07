@@ -11,11 +11,11 @@ interface ExtensionButtonProps {
 const ExtensionButton: React.FC<ExtensionButtonProps> = ({
     icon: Icon,
     isActive,
-    size = 20, // Define 20 como valor padrão se a `prop` não for passada
+    size = 15, // Define 20 como valor padrão se a `prop` não for passada
     onClick,
 }) => {
     // Estilos de botão com animações de hover e clique
-    const baseClasses = 'flex items-center justify-center w-10 h-10 rounded-lg cursor-pointer';
+    const baseClasses = 'flex items-center justify-center w-8 h-8 rounded-lg cursor-pointer';
     const normalClasses = 'text-gray-600 transition-all duration-300 transform hover:-translate-y-1'; // Translação no hover
     const selectedClasses = 'bg-main-white text-main-black';
 
