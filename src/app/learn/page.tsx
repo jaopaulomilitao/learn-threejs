@@ -6,6 +6,8 @@ import Image from "next/image";
 import LessonList from '@/components/lesson-list/LessonList';
 import { useLesson } from '@/features/lessons/hooks/useLesson';
 import Skeleton from "@/components/skeleton/Skeleton";
+import Lottie from 'react-lottie'; // Importando Lottie
+import animationData from '@/../../public/looties/duck-talk.json'; // Caminho para o arquivo Lottie
 
 const LearnPage: React.FC = () => {
     const [selectedLessonId, setSelectedLessonId] = useState<string | null>(null);
@@ -29,6 +31,16 @@ const LearnPage: React.FC = () => {
         );
     }, [selectedLessonId]);
 
+    // Configuração da animação Lottie
+    const lottieOptions = {
+        loop: true,
+        autoplay: true,
+        animationData: animationData, // Caminho para o arquivo Lottie
+        rendererSettings: {
+            preserveAspectRatio: 'xMidYMid slice',
+        },
+    };
+
     return (
         <div className="container mx-auto flex flex-col lg:flex-row gap-10 py-8 px-8 w-full">
             <div className="flex-none w-full lg:w-[20%] min-w-[200px] max-w-[250px] hidden 2xl:block">
@@ -49,7 +61,17 @@ const LearnPage: React.FC = () => {
                             <Skeleton className="w-full h-[250px] rounded-lg" />
                             <Skeleton className="w-full h-64 rounded-md" />
                         </div>
+                    ) : selectedLessonId === null ? (
+                        // Caso nenhum ID de lição seja selecionado
+                        <div className="flex flex-col items-center justify-center w-full h-full text-gray-500 opacity-40 mt-8">
+                            <p className="text-md font-bold text-center -mb-4">Escolha alguma prática para
+                                <br />fazer no menu lateral.</p>
+                            <div style={{ width: '150px', height: '150px' }}>
+                                <Lottie options={lottieOptions} />
+                            </div>
+                        </div>
                     ) : (
+                        // Exibir a lição selecionada
                         lessonData && (
                             <div className='flex flex-col gap-3 items-center w-full max-w-6xl justify-center'>
                                 <div className='flex flex-col gap-3 items-center w-full'>

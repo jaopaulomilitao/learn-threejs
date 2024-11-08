@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect, useState, useMemo } from 'react';
 import Editor from "@/components/editor/Editor";
 import { useLesson } from '@/features/lessons/hooks/useLesson';
@@ -8,6 +7,9 @@ import Image from 'next/image';
 import LessonList from '@/components/lesson-list/LessonList';
 import { uploadImage } from '@/features/lessons/api/storage';
 import Skeleton from "@/components/skeleton/Skeleton";
+import Lottie from 'react-lottie'; // Importando Lottie
+import animationData from '@/../../public/looties/duck-talk.json'; // Caminho para o arquivo Lottie
+
 
 const EditPage = () => {
     const [selectedLessonId, setSelectedLessonId] = useState<string | null>(null);
@@ -97,6 +99,16 @@ const EditPage = () => {
         );
     }, [selectedLessonId]);
 
+    // Configuração da animação Lottie
+    const lottieOptions = {
+        loop: true,
+        autoplay: true,
+        animationData: animationData, // Caminho para o arquivo Lottie
+        rendererSettings: {
+            preserveAspectRatio: 'xMidYMid slice',
+        },
+    };
+
     return (
         <div className="container mx-auto p-8 flex flex-col lg:flex-row gap-10 w-full">
             {/* Lesson List - Sidebar responsivo */}
@@ -125,6 +137,14 @@ const EditPage = () => {
                         {/* Skeleton para o editor */}
                         <Skeleton className="w-full h-64 rounded-md" />
                     </>
+                ) : selectedLessonId === null ? (
+                    <div className="flex flex-col items-center justify-center w-full h-full text-gray-500 opacity-40 mt-8">
+                        <p className="text-md font-bold text-center -mb-4">Escolha alguma prática para
+                            <br />fazer no menu lateral.</p>
+                        <div style={{ width: '150px', height: '150px' }}>
+                            <Lottie options={lottieOptions} />
+                        </div>
+                    </div>
                 ) : (
                     <>
                         <div className="flex flex-col gap-3 items-center w-full">

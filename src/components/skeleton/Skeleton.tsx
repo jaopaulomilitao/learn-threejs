@@ -12,7 +12,7 @@ const Skeleton: React.FC<SkeletonProps> = ({
         <div
             className={clsx(
                 className,
-                "bg-gray-300/40 animate-pulse border-[1.5px] border-gray-300/70 rounded-lg"
+                "bg-gray-300/40 animate-pulse rounded-lg"
             )}
         />
     );
