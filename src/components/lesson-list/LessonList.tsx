@@ -3,7 +3,7 @@ import { fetchLessons, addLesson } from '@/features/lessons/api/firestore';
 import ButtonMenuAside from '../button-menu-aside/ButtonMenuAside';
 import { FiBookOpen, FiBook } from 'react-icons/fi';
 import { Button } from '@nextui-org/react';
-import { Skeleton } from "@nextui-org/skeleton";
+import Skeleton from "@/components/skeleton/Skeleton";
 import { LuFilePlus } from 'react-icons/lu';
 import { HTMLAttributes } from 'react';
 
@@ -22,7 +22,7 @@ interface LessonListProps extends HTMLAttributes<HTMLDivElement> {
 const LessonList: React.FC<LessonListProps> = ({ onSelectLesson, selectedLessonId, isEditable = false }) => {
     const [lessons, setLessons] = useState<Lesson[]>([]);
     const [loading, setLoading] = useState(true);
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
     useEffect(() => {

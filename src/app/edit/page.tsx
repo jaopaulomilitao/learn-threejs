@@ -7,7 +7,7 @@ import { addLesson } from '@/features/lessons/api/firestore';
 import Image from 'next/image';
 import LessonList from '@/components/lesson-list/LessonList';
 import { uploadImage } from '@/features/lessons/api/storage';
-import { Skeleton } from "@nextui-org/react";
+import Skeleton from "@/components/skeleton/Skeleton";
 
 const EditPage = () => {
     const [selectedLessonId, setSelectedLessonId] = useState<string | null>(null);
@@ -110,7 +110,7 @@ const EditPage = () => {
             </div>
 
             {/* Conteúdo Principal, responsivo */}
-            <div className="flex-grow flex flex-col gap-9">
+            <div className="flex-grow flex flex-col gap-9 w-full">
                 {loading || imageLoading ? (
                     <>
                         {/* Skeleton para o título */}

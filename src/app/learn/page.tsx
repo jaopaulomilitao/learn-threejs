@@ -5,7 +5,7 @@ import LessonView from "@/components/lesson-viewer/LessonViewer";
 import Image from "next/image";
 import LessonList from '@/components/lesson-list/LessonList';
 import { useLesson } from '@/features/lessons/hooks/useLesson';
-import { Skeleton } from "@nextui-org/react";
+import Skeleton from "@/components/skeleton/Skeleton";
 
 const LearnPage: React.FC = () => {
     const [selectedLessonId, setSelectedLessonId] = useState<string | null>(null);
@@ -43,12 +43,12 @@ const LearnPage: React.FC = () => {
             <div className="flex-grow flex flex-col items-center gap-9 w-full" id="content">
                 <div className='w-full flex justify-center items-center'>
                     {loading ? (
-                        <>
+                        <div className='flex flex-col gap-3 items-center w-full justify-center'>
                             <Skeleton className="w-full h-12 rounded-md" />
                             <Skeleton className="w-full h-8 rounded-md" />
                             <Skeleton className="w-full h-[250px] rounded-lg" />
                             <Skeleton className="w-full h-64 rounded-md" />
-                        </>
+                        </div>
                     ) : (
                         lessonData && (
                             <div className='flex flex-col gap-3 items-center w-full max-w-6xl justify-center'>
