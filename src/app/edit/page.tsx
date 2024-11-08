@@ -1,5 +1,7 @@
 'use client';
 import { useEffect, useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation'; // Importando useRouter de next/navigation
+import { getAuth, onAuthStateChanged } from 'firebase/auth'; // Importando Firebase Authentication
 import Editor from "@/components/editor/Editor";
 import { useLesson } from '@/features/lessons/hooks/useLesson';
 import { addLesson } from '@/features/lessons/api/firestore';
@@ -9,7 +11,6 @@ import { uploadImage } from '@/features/lessons/api/storage';
 import Skeleton from "@/components/skeleton/Skeleton";
 import Lottie from 'react-lottie'; // Importando Lottie
 import animationData from '@/../../public/looties/duck-talk.json'; // Caminho para o arquivo Lottie
-
 
 const EditPage = () => {
     const [selectedLessonId, setSelectedLessonId] = useState<string | null>(null);
@@ -21,7 +22,23 @@ const EditPage = () => {
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imageUploading, setImageUploading] = useState(false);
     const [imageLoading, setImageLoading] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado para verificar a autenticação
+    const router = useRouter(); // Importando useRouter de next/navigation
     const { save, lessonData, loading } = useLesson(selectedLessonId || "");
+
+    useEffect(() => {
+        const auth = getAuth();
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setIsAuthenticated(true);
+            } else {
+                setIsAuthenticated(false);
+                router.push('/login'); // Redireciona para a página de login se não estiver autenticado
+            }
+        });
+
+        return () => unsubscribe();
+    }, [router]);
 
     useEffect(() => {
         if (lessonData) {
@@ -108,6 +125,13 @@ const EditPage = () => {
             preserveAspectRatio: 'xMidYMid slice',
         },
     };
+
+    if (!isAuthenticated) {
+        return (
+            <div className="flex flex-col items-center justify-center w-full h-full text-gray-500 opacity-40 mt-8">
+                <p className="text-md font-bold text-center -mb-4">Direcionando para a página...</p>
+            </div>);
+    }
 
     return (
         <div className="container mx-auto p-8 flex flex-col lg:flex-row gap-10 w-full">
