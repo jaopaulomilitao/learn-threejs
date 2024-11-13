@@ -37,13 +37,10 @@ h3 {
 
 .editor-link {
   cursor: pointer;
-  /* Cursor de pointer para o link */
-  color: blue;
+  color: rgb(80, 163, 163);
   /* Cor azul */
   font-weight: bold;
-  /* Texto em negrito */
-  text-decoration: underline;
-  /* Sublinhado */
+  /* text-decoration: underline; */
 }
 
 .editor-link:hover {
