@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+p:empty {
+  display: block;
+  height: 1em;
+}
+
+h1 {
+  @apply text-3xl;
+  /* ou um tamanho de fonte que preferir */
+}
+
+h2 {
+  @apply text-2xl;
+  /* ou um tamanho de fonte que preferir */
+}
+
+h3 {
+  @apply text-xl;
+  /* ou um tamanho de fonte que preferir */
+}
+
+.ProseMirror:focus {
+  outline: none;
+}
+
+.editor-link {
+  cursor: pointer;
+  /* Cursor de pointer para o link */
+  color: blue;
+  /* Cor azul */
+  font-weight: bold;
+  /* Texto em negrito */
+  text-decoration: underline;
+  /* Sublinhado */
+}
+
+.editor-link:hover {
+  color: darkblue;
+  /* Azul mais escuro ao passar o mouse */
+}
