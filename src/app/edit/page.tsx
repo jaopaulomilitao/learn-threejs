@@ -210,6 +210,7 @@ const EditPage = () => {
                                 layout="fill"
                                 objectFit="cover"
                                 className="rounded-lg hover:scale-105 transition-transform duration-300"
+                                priority
                             />
                             <div className="absolute inset-0 bg-black opacity-0 hover:opacity-30 transition-opacity duration-300" />
                         </div>

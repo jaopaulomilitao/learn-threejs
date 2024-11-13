@@ -87,6 +87,7 @@ const LearnPage: React.FC = () => {
                                         layout="fill"
                                         objectFit="cover"
                                         className="rounded-lg hover:scale-105 transition-transform duration-300"
+                                        priority
                                     />
                                 </div>
 
