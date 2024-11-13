@@ -97,6 +97,7 @@ const LessonList: React.FC<LessonListProps> = ({ onSelectLesson, selectedLessonI
                         />
                     ))
                 )}
+                <p className='text-xs text-center opacity-50'>Em breve, mais práticas serão adicionadas com o decorrer da disciplina.</p>
             </div>
 
             {/* Botão de adicionar nova lição */}

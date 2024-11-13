@@ -1,8 +1,17 @@
+'use client';
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push('/learn');
+  }, [router]);
+
   return (
     <div>
-      <h1>Learn Three.js</h1>
+      {/* Aqui você pode adicionar conteúdo ou manter vazio */}
     </div>
   );
 }

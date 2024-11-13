@@ -57,10 +57,14 @@ const Editor: React.FC<EditorProps> = ({ content, onChange }) => {
       }),
       CodeBlock.configure({
         HTMLAttributes: {
-          class: 'bg-gray-100 p-4 rounded-md overflow-auto',
+          class: 'bg-main-black text-gray-100 p-4 rounded-md overflow-auto font-mono',
         },
       }),
-      HorizontalRule,
+      HorizontalRule.configure({
+        HTMLAttributes: {
+          class: 'border-t-1 border-gray-500 my-4',
+        },
+      }),
       // Document,
       Paragraph,
       Text,
