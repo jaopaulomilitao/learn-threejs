@@ -10,7 +10,7 @@ import Heading from '@tiptap/extension-heading';
 import Blockquote from '@tiptap/extension-blockquote';
 import CodeBlock from '@tiptap/extension-code-block';
 import HorizontalRule from '@tiptap/extension-horizontal-rule';
-import Document from '@tiptap/extension-document';
+// import Document from '@tiptap/extension-document';
 import Paragraph from '@tiptap/extension-paragraph';
 import Text from '@tiptap/extension-text';
 import TextAlign from '@tiptap/extension-text-align';
@@ -61,7 +61,7 @@ const Editor: React.FC<EditorProps> = ({ content, onChange }) => {
         },
       }),
       HorizontalRule,
-      Document,
+      // Document,
       Paragraph,
       Text,
       ImageResize,
