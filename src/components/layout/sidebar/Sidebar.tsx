@@ -69,6 +69,7 @@ interface SidebarProps extends HTMLAttributes<HTMLDivElement> {
   onSelectLesson: (lessonId: string) => void;
   selectedLessonId: string | null;
   isEditable?: boolean;
+  isMobile?: boolean; // <-- RECEBENDO A PROPRIEDADE
 }
 const SortableAccordionItem = ({
   lesson,
@@ -210,6 +211,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onSelectLesson,
   selectedLessonId,
   isEditable = false,
+  isMobile = false, // <-- RECEBENDO A PROPRIEDADE
 }) => {
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState(true);
@@ -311,8 +313,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const displayedLessons = isEditable ? lessons : lessons.filter(l => l.visible !== false);
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-[280px] bg-white border-r border-slate-200 p-4 pb-6 flex flex-col z-50 overflow-hidden">
-      
+    <aside 
+      className={clsx(
+        "bg-white flex flex-col overflow-hidden p-4 pb-6 z-50",
+        isMobile 
+          ? "w-full h-full" // Se for mobile (dentro do Sheet), ocupa 100% do espaço da gaveta
+          : "fixed left-0 top-0 h-screen w-[280px] border-r border-slate-200 hidden lg:flex" // Se for desktop, fixa na esquerda e some no mobile
+      )}
+    >  
       <div className="mb-6 mt-2 flex flex-col justify-start w-full px-2 shrink-0">
         <div className="pb-6">
           <img
