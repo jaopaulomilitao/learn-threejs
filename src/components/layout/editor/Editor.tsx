@@ -17,9 +17,9 @@ import TextAlign from '@tiptap/extension-text-align';
 import Link from '@tiptap/extension-link'; // Importando a extensão de Link
 import { Dispatch, SetStateAction } from 'react';
 import { uploadImage } from '@/features/images/api/storage';
-import Iframe from '../../lib/tiptap/extensions/Embed';
+import Iframe from '@/lib/tiptap/extensions/Embed';
 import { FaBold, FaItalic, FaQuoteLeft, FaCode, FaListUl, FaListOl, FaImage, FaLink, FaAlignLeft, FaAlignCenter, FaAlignRight, FaAlignJustify } from 'react-icons/fa'; // Ícones do react-icons
-import ExtensionButton from '../extension-button/ExtensionButton';
+import ExtensionButton from '@/components/ui/extension-button/ExtensionButton'; // Componente de botão para extensões
 import { AiOutlineCodepen } from 'react-icons/ai';
 import { TbH1, TbH2, TbH3 } from 'react-icons/tb';
 

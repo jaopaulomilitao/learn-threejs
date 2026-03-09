@@ -1,17 +1,25 @@
 import type { Metadata } from "next";
+import { Inter, DM_Sans } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
 import "./globals.css";
-import { Inter } from 'next/font/google';
 
-// Importando a fonte Inter com todos os pesos
+// configures inter font with all weights
 const inter = Inter({
-  subsets: ['latin'],
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
-  display: 'swap',
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+// configures dm sans font with all weights
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-dm-sans",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: "Learn Three.js",
-  description: "A blog where teachers can create and update documents about CGI using Three.js, and students can learn in a practical and organized way.",
+  description: "Plataforma de ensino de Computação Gráfica",
 };
 
 export default function RootLayout({
@@ -20,8 +28,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-br" className={inter.className}>
-      <body className="bg-main-white text-main-black">
+    // injects the css variables into the html tag
+    <html lang="pt-BR" className={`${inter.variable} ${dmSans.variable} ${GeistSans.variable}`}>
+      <body className="font-sans antialiased bg-main-white text-main-black">
         {children}
       </body>
     </html>
