@@ -76,13 +76,14 @@ interface SidebarProps extends HTMLAttributes<HTMLDivElement> {
   isEditable?: boolean; // Mantido por compatibilidade, mas o Zustand vai mandar agora
   isMobile?: boolean;
 }
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const SortableAccordionItem = ({
   lesson,
   isSelected,
   isEditable,
   onDelete,
   onToggleVisibility,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }: any) => {
   const {
     attributes,

@@ -59,6 +59,7 @@ export default function SetupPage() {
                 });
 
                 setLog((prev) => [...prev, `✅ Sucesso: ${student.name} criado.`]);
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (error: any) {
                 setLog((prev) => [...prev, `❌ Erro em ${student.name}: ${error.message}`]);
             }

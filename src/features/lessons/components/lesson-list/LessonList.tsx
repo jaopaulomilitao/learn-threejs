@@ -47,12 +47,14 @@ interface LessonListProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 // creates a wrapper component to handle the sortable logic for each item
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const SortableLessonItem = ({
   lesson,
   isSelected,
   onSelect,
   isEditable,
   onDelete,
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 }: any) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: lesson.id });
@@ -126,10 +128,10 @@ const LessonList: React.FC<LessonListProps> = ({
   }, []);
 
   // handles the backup process
-  const handleBackupClick = async () => {
-    await downloadLessonsBackup();
-    alert("Backup concluído! Verifique seus downloads.");
-  };
+  // const handleBackupClick = async () => {
+  //   await downloadLessonsBackup();
+  //   alert("Backup concluído! Verifique seus downloads.");
+  // };
 
   // handles the creation of a new lesson
   const handleAddLesson = async () => {
