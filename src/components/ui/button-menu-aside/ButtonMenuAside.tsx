@@ -11,7 +11,9 @@ interface ButtonMenuAsideProps {
     onClick: () => void;
     onDelete?: () => void;
     isEditable?: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dragListeners?: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dragAttributes?: any;
 }
 

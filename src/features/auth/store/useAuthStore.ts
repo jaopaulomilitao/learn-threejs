@@ -20,8 +20,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     isLoading: true,
 
     initAuthListener: () => {
-        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-            if (currentUser) {
+        onAuthStateChanged(auth, async (currentUser) => {
+        if (currentUser) {
                 try {
                     // fetches the user document from firestore to get roles and pixels
                     const userDocRef = doc(firestore, 'users', currentUser.uid);
