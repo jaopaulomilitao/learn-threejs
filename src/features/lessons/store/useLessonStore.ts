@@ -9,13 +9,21 @@ interface LessonState {
     removeLesson: (id: string) => Promise<void>;
     activeTopic: string | null;
     setActiveTopic: (topic: string | null) => void;
+    selectedLessonId: string | null;
+    setSelectedLessonId: (id: string | null) => void;
 }
 
 export const useLessonStore = create<LessonState>((set, get) => ({
     lessons: [],
-    
     activeTopic: null,
+    selectedLessonId: null,
+    
+    // sets the active scroll topic
     setActiveTopic: (topic) => set({ activeTopic: topic }),
+    
+    // sets the currently selected lesson for the viewer
+    setSelectedLessonId: (id) => set({ selectedLessonId: id }),
+    
     loadLessons: async () => {
         try {
             // fetches the sorted lessons

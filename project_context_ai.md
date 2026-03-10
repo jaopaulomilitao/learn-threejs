@@ -1,5 +1,5 @@
 # AI Context & Instruction File
-Generated on: Mon, Mar  9, 2026 11:40:40 AM
+Generated on: Tue, Mar 10, 2026 11:30:37 AM
 
 ## 1. System Role & Methodology
 You are an expert full-stack developer proficient in TypeScript, React, Next.js 14 (App Router), Firebase, and Zustand. 
@@ -64,12 +64,17 @@ Create a secure, highly scalable, and engaging full-stack platform for universit
 ./src/components
 ./src/components/layout
 ./src/components/layout/editor
+./src/components/layout/mobile-header
 ./src/components/layout/sidebar
 ./src/components/ui
 ./src/components/ui/accordion.tsx
+./src/components/ui/avatar.tsx
+./src/components/ui/button.tsx
 ./src/components/ui/button-menu-aside
+./src/components/ui/dropdown-menu.tsx
 ./src/components/ui/extension-button
 ./src/components/ui/image-uploader
+./src/components/ui/sheet.tsx
 ./src/components/ui/skeleton
 ./src/components/ui/skeleton.tsx
 ./src/components/ui/tooltip.tsx
@@ -92,6 +97,7 @@ Create a secure, highly scalable, and engaging full-stack platform for universit
 ./src/lib/tiptap/extensions
 ./src/lib/utils.ts
 ./src/store
+./src/store/useLessonStore.ts
 ./tailwind.config.ts
 ./tsconfig.json
 ./update_context.sh
@@ -252,6 +258,77 @@ h3 { @apply text-xl; }
 .editor-link:hover {
   color: darkblue;
 }
+
+/* Custom Scrollbar for Sidebar */
+.custom-scrollbar {
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.custom-dash {
+  --b: 4px;   /* Espessura da borda */
+  --s: 20px;  /* Tamanho do traço (dash) */
+  --c: #333;  /* Cor */
+  
+  padding: 10px;
+  background: repeating-linear-gradient(90deg, var(--c) 0 var(--s), #0000 0 calc(var(--s) * 2)) 0/100% var(--b) no-repeat,
+              repeating-linear-gradient(0deg, var(--c) 0 var(--s), #0000 0 calc(var(--s) * 2)) 100%/var(--b) 100% no-repeat,
+              repeating-linear-gradient(90deg, var(--c) 0 var(--s), #0000 0 calc(var(--s) * 2)) 0 100%/100% var(--b) no-repeat,
+              repeating-linear-gradient(0deg, var(--c) 0 var(--s), #0000 0 calc(var(--s) * 2)) 0 0/var(--b) 100% no-repeat;
+}
+
+/* Animação garantida para os Acordeões do Shadcn (Radix UI) */
+[data-radix-accordion-content] {
+  overflow: hidden;
+}
+
+[data-radix-accordion-content][data-state="open"] {
+  animation: slideDown 0.3s cubic-bezier(0.87, 0, 0.13, 1) forwards;
+}
+
+[data-radix-accordion-content][data-state="closed"] {
+  animation: slideUp 0.3s cubic-bezier(0.87, 0, 0.13, 1) forwards;
+}
+
+@keyframes slideDown {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+  to {
+    height: 0;
+    opacity: 0;
+  }
+}
 ```
 
 ### Tailwind Config
@@ -276,7 +353,6 @@ const config = {
       },
     },
     extend: {
-      // registers the custom font families mapped to css variables
       fontFamily: {
         sans: ["var(--font-inter)", "sans-serif"],
         geist: ["var(--font-geist-sans)", "sans-serif"],
@@ -327,6 +403,21 @@ const config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      // ANIMAÇÕES DO SHADCN ADICIONADAS AQUI
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
@@ -364,7 +455,51 @@ export { auth, firestore, storage };
 
 ### Zustand Stores
 ```typescript
-```
+import { create } from 'zustand';
+import { deleteLesson, fetchLessons, Lesson } from '../api/firestore';
+
+interface LessonState {
+    lessons: Lesson[];
+    // fetches all lessons from the database and updates the store
+    loadLessons: () => Promise<void>;
+    // removes a lesson from the store and database optimistically
+    removeLesson: (id: string) => Promise<void>;
+    activeTopic: string | null;
+    setActiveTopic: (topic: string | null) => void;
+}
+
+export const useLessonStore = create<LessonState>((set, get) => ({
+    lessons: [],
+    
+    activeTopic: null,
+    setActiveTopic: (topic) => set({ activeTopic: topic }),
+    loadLessons: async () => {
+        try {
+            // fetches the sorted lessons
+            const data = await fetchLessons();
+            set({ lessons: data as unknown as Lesson[] });
+        } catch (error) {
+            console.error('failed to load lessons:', error);
+        }
+    },
+
+    removeLesson: async (id: string) => {
+        // saves the current state in case of an error
+        const previousLessons = get().lessons;
+
+        // updates the ui optimistically 
+        set({ lessons: previousLessons.filter((lesson) => lesson.id !== id) });
+
+        try {
+            // executes the database deletion
+            await deleteLesson(id);
+        } catch (error) {
+            // restores the previous state if the database operation fails
+            set({ lessons: previousLessons });
+            console.error('failed to delete lesson:', error);
+        }
+    },
+})); ```
 
 ---
 ## 6. Current Task

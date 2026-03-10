@@ -13,7 +13,7 @@ import { MdOutlineDragIndicator } from "react-icons/md";
 import { LuFilePlus } from "react-icons/lu";
 import clsx from "clsx";
 import { useLessonStore } from "@/features/lessons/store/useLessonStore";
-
+import Link from "next/link";
 // shadcn ui imports
 import {
   Accordion,
@@ -334,17 +334,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       <div className="flex flex-col gap-2 mb-4 shrink-0">
         <TooltipProvider delayDuration={100}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button className="flex items-center gap-3 w-full p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-main-black font-semibold transition-colors shadow-sm text-sm">
-                <FiMap className="text-lg shrink-0" />
-                <span>Roadmap</span>
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="right">
-              <p>Em breve</p>
-            </TooltipContent>
-          </Tooltip>
+          <Link 
+          href="/roadmap"
+          className="flex items-center gap-3 w-full p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-main-black font-semibold transition-colors shadow-sm text-sm outline-none"
+        >
+          <FiMap className="text-lg shrink-0" />
+          <span>Roadmap</span>
+        </Link>
 
           {/* <Tooltip>
             <TooltipTrigger asChild>

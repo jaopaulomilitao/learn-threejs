@@ -96,7 +96,7 @@ fi
 if [ -d "src/store" ] || [ -d "src/stores" ]; then
     echo -e "\n### Zustand Stores" >> "$OUTPUT_FILE"
     echo '```typescript' >> "$OUTPUT_FILE"
-    find src/store src/stores -maxdepth 1 -name "*.ts" -exec cat {} + 2>/dev/null >> "$OUTPUT_FILE"
+    find src/features/*/store src/stores -maxdepth 1 -name "*.ts" -exec cat {} + 2>/dev/null >> "$OUTPUT_FILE"
     echo '```' >> "$OUTPUT_FILE"
 fi
 
