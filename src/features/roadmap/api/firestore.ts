@@ -42,5 +42,11 @@ export const fetchRoadmap = async () => {
 // saves the updated roadmap (nodes positions and edges) to firestore
 export const saveRoadmap = async (nodes: CustomNode[], edges: Edge[]) => {
     const docRef = doc(firestore, 'roadmaps', 'main-roadmap');
-    await setDoc(docRef, { nodes, edges }, { merge: true });
+    
+    // sanitizes payloads by deeply cloning them via json
+    // this natively strips out all 'undefined' values injected by react flow or the ui
+    const cleanNodes = JSON.parse(JSON.stringify(nodes));
+    const cleanEdges = JSON.parse(JSON.stringify(edges));
+
+    await setDoc(docRef, { nodes: cleanNodes, edges: cleanEdges }, { merge: true });
 };
