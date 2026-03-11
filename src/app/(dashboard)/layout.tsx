@@ -4,6 +4,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Sidebar from "@/components/layout/sidebar/Sidebar";
 import MobileHeader from "@/components/layout/mobile-header/MobileHeader";
 import { useLessonStore } from "@/features/lessons/store/useLessonStore";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
@@ -30,6 +31,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             />
             <main className="flex-1 w-full min-h-screen pt-16 lg:pt-0 lg:pl-[280px] transition-all duration-300">
                 {children}
+                <Toaster position="bottom-right" richColors />
             </main>
         </div>
     );

@@ -15,6 +15,7 @@ import {
   FiMoreVertical,
   FiEyeOff,
   FiEye,
+  FiShield
 } from "react-icons/fi";
 import { MdOutlineDragIndicator } from "react-icons/md";
 import { LuFilePlus } from "react-icons/lu";
@@ -23,7 +24,6 @@ import { useLessonStore } from "@/features/lessons/store/useLessonStore";
 import Link from "next/link";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { FiLogOut, FiUser } from "react-icons/fi";
-
 // shadcn ui imports
 import {
   Accordion,
@@ -40,7 +40,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
+import { useTeamStore } from "@/features/teams/store/useTeamStore";
 // dnd-kit imports
 import {
   DndContext,
@@ -363,6 +363,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
       .toUpperCase();
   };
 
+
+
+  const { teams, loadData: loadTeams } = useTeamStore();
+
+  // carrega as equipes assim que a sidebar montar (para poder ler o nome da equipe do usuario)
+  useEffect(() => {
+      if (user && userData?.teamId) {
+          loadTeams();
+      }
+  }, [user, userData, loadTeams]);
+
+  // acha o nome da equipe baseado no id salvo no perfil
+  const userTeamName = useMemo(() => {
+      if (!userData?.teamId) return "Sem equipe";
+      const team = teams.find(t => t.id === userData.teamId);
+      return team ? team.name : `Equipe ${userData.teamId.substring(0,4)}...`;
+  }, [userData, teams]);
+
   return (
     <aside
       className={clsx(
@@ -392,6 +410,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <FiMap className="text-lg shrink-0" />
             <span>Roadmap</span>
           </Link>
+
+          <Link 
+              href="/team"
+              className="flex items-center gap-3 w-full p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-main-black font-semibold transition-colors shadow-sm text-sm outline-none"
+            >
+              <FiShield className="text-lg shrink-0" />
+              <span>{canEdit ? 'Gestão de Equipes' : 'Minha Equipe'}</span>
+            </Link>
         </div>
       )}
 
@@ -489,26 +515,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     {getInitials(userData.name)}
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex flex-col min-w-0">
-                  <p className="text-sm font-bold text-main-black leading-tight truncate">
-                    {userData.name || "Usuário"}
-                  </p>
-                  <p className="text-xs font-semibold text-slate-500 truncate">
-                    {userData.pixels} Pixels •{" "}
-                    {userData.teamId
-                      ? `Equipe ${userData.teamId}`
-                      : "Sem equipe"}
-                  </p>
-                </div>
+                <div className="flex flex-col min-w-0 text-left">
+                    <p className="text-sm font-bold text-main-black leading-tight truncate">
+                      {userData.name || 'Usuário'}
+                    </p>
+                    <p className="text-xs font-semibold text-slate-500 truncate">
+                      {userData.pixels} Pixels • {userTeamName}
+                    </p>
+                  </div>
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
               className="w-56 bg-white border-slate-200 shadow-lg text-main-black rounded-xl mb-2"
             >
-              <DropdownMenuItem className="cursor-pointer py-2.5 font-medium">
+              {/* <DropdownMenuItem className="cursor-pointer py-2.5 font-medium">
                 <FiUser className="mr-2 h-4 w-4" /> Ver Perfil
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuItem
                 onClick={logout}
                 className="cursor-pointer py-2.5 font-medium text-red-500 focus:text-red-600 focus:bg-red-50"
