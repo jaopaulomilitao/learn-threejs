@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 // imports our newly created client component
 import { AuthListener } from "@/features/auth/components/AuthListener";
+import { Toaster } from "@/components/ui/sonner";
 
 // configures inter font with all weights
 const inter = Inter({
@@ -21,8 +22,8 @@ const dmSans = DM_Sans({
 
 // metadata is strictly a server-side feature
 export const metadata: Metadata = {
-  title: "Learn Three.js",
-  description: "Plataforma de ensino de Computação Gráfica",
+  title: "Graphics IsCool",
+  description: "Plataforma de ensino de Computação Gráfica para estudantes de graduação da UFC Sobral",
 };
 
 export default function RootLayout({
@@ -38,6 +39,7 @@ export default function RootLayout({
         <AuthListener />
         
         {children}
+        
       </body>
     </html>
   );
