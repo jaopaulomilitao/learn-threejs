@@ -23,7 +23,7 @@ import clsx from "clsx";
 import { useLessonStore } from "@/features/lessons/store/useLessonStore";
 import Link from "next/link";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
-import { FiLogOut, FiUser } from "react-icons/fi";
+import { FiLogOut } from "react-icons/fi";
 // shadcn ui imports
 import {
   Accordion,
@@ -31,7 +31,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -73,9 +72,10 @@ interface Lesson {
 interface SidebarProps extends HTMLAttributes<HTMLDivElement> {
   onSelectLesson: (lessonId: string) => void;
   selectedLessonId: string | null;
-  isEditable?: boolean; // Mantido por compatibilidade, mas o Zustand vai mandar agora
+  isEditable?: boolean; 
   isMobile?: boolean;
 }
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const SortableAccordionItem = ({
   lesson,
@@ -83,7 +83,6 @@ const SortableAccordionItem = ({
   isEditable,
   onDelete,
   onToggleVisibility,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }: any) => {
   const {
     attributes,
@@ -241,11 +240,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // fetches auth state
   const { user, userData, logout } = useAuthStore();
+  const { teams, loadData: loadTeams } = useTeamStore();
 
-  // MÁGICA: A Sidebar agora decide se é editável lendo direto do banco via Zustand!
   const canEdit = isEditable || userData?.role === "admin";
+
+  // Identifica se é um visitante baseando-se na existência do usuário, role ou no nome mockado
+  const isVisitor = 
+    !user || 
+    !userData || 
+    userData.name?.toLowerCase() === "john doe";
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -347,13 +351,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }
   };
 
-  // Usa a nova variável canEdit para filtrar a lista
   const displayedLessons = canEdit
     ? lessons
     : lessons.filter((l) => l.visible !== false);
 
   const getInitials = (name?: string) => {
-    if (!name) return "AD";
+    // Fallback atualizado para evitar o 'AD' se o nome falhar
+    if (!name || name === "John Doe") return "VI";
     return name
       .split(" ")
       .filter(Boolean)
@@ -363,18 +367,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       .toUpperCase();
   };
 
-
-
-  const { teams, loadData: loadTeams } = useTeamStore();
-
-  // carrega as equipes assim que a sidebar montar (para poder ler o nome da equipe do usuario)
   useEffect(() => {
-      if (user && userData?.teamId) {
+      if (user && userData?.teamId && !isVisitor) {
           loadTeams();
       }
-  }, [user, userData, loadTeams]);
+  }, [user, userData, loadTeams, isVisitor]);
 
-  // acha o nome da equipe baseado no id salvo no perfil
   const userTeamName = useMemo(() => {
       if (!userData?.teamId) return "Sem equipe";
       const team = teams.find(t => t.id === userData.teamId);
@@ -401,35 +399,33 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="w-full h-[1.5px] bg-[linear-gradient(to_right,#cbd5e1_50%,transparent_50%)] bg-[length:12px_1px]"></div>
       </div>
 
-      {user && (
-        <div className="flex flex-col gap-2 mb-4 shrink-0">
-          <Link
-            href="/roadmap"
+      <div className="flex flex-col gap-2 mb-4 shrink-0">
+        {/* Roadmap agora fica fora da validação, visível para todos (visitantes inclusos) */}
+        <Link
+          href="/roadmap"
+          className="flex items-center gap-3 w-full p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-main-black font-semibold transition-colors shadow-sm text-sm outline-none"
+        >
+          <FiMap className="text-lg shrink-0" />
+          <span>Roadmap</span>
+        </Link>
+
+        {/* Gestão de Equipe fica restrita aos usuários genuínos */}
+        {!isVisitor && (
+          <Link 
+            href="/team"
             className="flex items-center gap-3 w-full p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-main-black font-semibold transition-colors shadow-sm text-sm outline-none"
           >
-            <FiMap className="text-lg shrink-0" />
-            <span>Roadmap</span>
+            <FiShield className="text-lg shrink-0" />
+            <span>{canEdit ? 'Gestão de Equipes' : 'Minha Equipe'}</span>
           </Link>
+        )}
+      </div>
 
-          <Link 
-              href="/team"
-              className="flex items-center gap-3 w-full p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-main-black font-semibold transition-colors shadow-sm text-sm outline-none"
-            >
-              <FiShield className="text-lg shrink-0" />
-              <span>{canEdit ? 'Gestão de Equipes' : 'Minha Equipe'}</span>
-            </Link>
-        </div>
-      )}
-
-      {/* CORREÇÃO CRÍTICA DE FLEXBOX: 
-        1. flex-1 e min-h-0 garantem que essa div ocupe exatamente o espaço restante até o rodapé.
-        2. overflow-y-auto faz a mágica de rolar toda a seção (incluindo o acordeão) se a lista for grande.
-      */}
       <div className="w-full flex-1 min-h-0 overflow-y-auto custom-scrollbar pb-2">
         <Accordion
           type="single"
           collapsible
-          defaultValue="lessons-global" // <-- Mantém a aba aberta por padrão
+          defaultValue="lessons-global"
           className="w-full"
         >
           <AccordionItem
@@ -446,7 +442,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </AccordionTrigger>
 
             <AccordionContent className="pt-4 pb-0">
-              {/* Removido o max-h manual daqui. A lista agora cresce naturalmente */}
               <div className="flex flex-col w-full">
                 {loading ? (
                   <div className="flex flex-col gap-2">
@@ -487,7 +482,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 )}
               </div>
 
-              {/* O botão agora é empurrado livremente para baixo sem ser cortado */}
               {canEdit && (
                 <button
                   onClick={handleAddLesson}
@@ -502,10 +496,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </Accordion>
       </div>
 
-      {/* REMOVIDO a div vazia (flex-1 min-h-0 pointer-events-none) que estava engolindo o espaço! */}
-
-      {/* conditionally renders user profile footer for authenticated users only */}
-      {user && userData && (
+      {/* Profile Footer agora só aparece se NÃO for um visitante */}
+      {!isVisitor && (
         <div className="mt-4 pt-3 shrink-0 border-t border-slate-100">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -529,9 +521,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
               align="end"
               className="w-56 bg-white border-slate-200 shadow-lg text-main-black rounded-xl mb-2"
             >
-              {/* <DropdownMenuItem className="cursor-pointer py-2.5 font-medium">
-                <FiUser className="mr-2 h-4 w-4" /> Ver Perfil
-              </DropdownMenuItem> */}
               <DropdownMenuItem
                 onClick={logout}
                 className="cursor-pointer py-2.5 font-medium text-red-500 focus:text-red-600 focus:bg-red-50"
